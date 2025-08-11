@@ -160,12 +160,12 @@
             }
         }
         
-        /* Nuevas clases para roles específicos */
+        /* New role-specific classes */
         .role-admin { background-color: rgba(139, 92, 246, 0.1); border-left: 4px solid var(--color-admin); }
         .role-investor { background-color: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--color-investor); }
         .role-farmer { background-color: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--color-farmer); }
         
-        /* Estilos para diagramas */
+        /* Styles for diagrams */
         .data-flow {
             position: relative;
             padding: 2rem;
@@ -421,7 +421,7 @@
 
           <div class="prose prose-lg max-w-none">
             <p class="text-xl text-gray-700 mb-6 leading-relaxed">
-              Sustave, a pioneering agritech and carbon credit tokenization platform, has developed a highly specialized PostgreSQL database architecture that ensures security, performance, and scalability in its sustainable agriculture ecosystem. This system is critical for connecting African farmers with global investors through the tokenización of farmland (AcreNFTs) and verified carbon credits.
+              Sustave, a pioneering agritech and carbon credit tokenization platform, has developed a highly specialized PostgreSQL database architecture that ensures security, performance, and scalability in its sustainable agriculture ecosystem. This system is critical for connecting African farmers with global investors through the tokenization of farmland (AcreNFTs) and verified carbon credits.
             </p>
 
             <div class="grid md:grid-cols-3 gap-6 my-8">
@@ -486,14 +486,14 @@
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Implementation Example for Farmers</h5>
               <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
--- Políticas para agricultores
+-- Policies for farmers
 CREATE POLICY farmer_self ON farmers
 FOR ALL
 TO farmer
 USING (user_id = current_user_id())
 WITH CHECK (user_id = current_user_id());
 
--- Políticas para actividades agrícolas
+-- Policies for farm activities
 CREATE POLICY farmer_farm_activities ON farm_activities
 FOR ALL
 TO farmer
@@ -514,7 +514,7 @@ WITH CHECK (farmer_id = current_user_id());</pre>
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Wallet-Centric Policy Example</h5>
               <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
--- Políticas para balances de tokens
+-- Policies for token balances
 CREATE POLICY user_token_balances ON token_balances
 FOR ALL
 TO investor, farmer, franchise
@@ -606,10 +606,10 @@ CREATE TABLE wallets (
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
     
-    -- Un usuario no puede tener dos wallets en la misma red
+    -- A user cannot have two wallets on the same network
     UNIQUE (user_id, network_id),
     
-    -- Solo una wallet primaria por usuario
+    -- Only one primary wallet per user
     EXCLUDE (user_id WITH =, is_primary WITH =) 
     WHERE (is_primary = TRUE) 
     DEFERRABLE INITIALLY DEFERRED
@@ -636,7 +636,7 @@ CREATE TABLE wallets (
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Platform Wallet Implementation</h5>
               <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
--- ID reservado para la wallet administrativa
+-- Reserved ID for the administrative wallet
 CREATE OR REPLACE FUNCTION get_platform_wallet_id()
 RETURNS UUID AS $$
 BEGIN
@@ -644,7 +644,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Crear usuario para la wallet administrativa
+-- Create user for the administrative wallet
 INSERT INTO users (
     id, 
     wallet_address, 
@@ -693,19 +693,19 @@ SET
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Key Indexes Implementation</h5>
               <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
--- Índices para rendimiento en actividades agrícolas
+-- Indexes for farm activities performance
 CREATE INDEX idx_farm_activities_farmer ON farm_activities(farmer_id);
 CREATE INDEX idx_farm_activities_date ON farm_activities(date DESC);
 
--- Índices para rendimiento en créditos de carbono
+-- Indexes for carbon credits performance
 CREATE INDEX idx_carbon_credits_acre_status ON carbon_credits(acre_nft_id, verification_status);
 CREATE INDEX idx_carbon_credits_verification ON carbon_credits(verification_status);
 
--- Índices para rendimiento en inversiones
+-- Indexes for investment performance
 CREATE INDEX idx_investment_portfolios_user ON investment_portfolios(user_id);
 CREATE INDEX idx_investment_portfolios_user_asset ON investment_portfolios(user_id, asset_type);
 
--- Índices espaciales para geolocalización
+-- Spatial indexes for geolocation
 CREATE INDEX idx_users_location ON users USING GIST(location);
 CREATE INDEX idx_farmers_location ON farmers USING GIST(location);
 CREATE INDEX idx_acre_nfts_location ON acre_nfts USING GIST(location);</pre>
@@ -723,8 +723,8 @@ CREATE INDEX idx_acre_nfts_location ON acre_nfts USING GIST(location);</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">PostGIS Implementation for Farm Activities</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
--- Tabla para métricas de rendimiento agrícola
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+-- Table for farm performance metrics
 CREATE TABLE farm_performance (
     performance_id SERIAL PRIMARY KEY,
     acre_nft_id INT NOT NULL REFERENCES acre_nfts(nft_id) ON DELETE CASCADE,
@@ -734,7 +734,7 @@ CREATE TABLE farm_performance (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Índice espacial para análisis geográfico
+-- Spatial index for geographic analysis
 CREATE INDEX idx_farm_performance_acre ON farm_performance(acre_nft_id);
 CREATE INDEX idx_farm_performance_location ON farm_performance 
 USING GIST (acre_nft_id) 
@@ -749,17 +749,17 @@ WHERE carbon_sequestration_tons > 0;</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Optimized Token Transfer Processing</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
--- Función optimizada para actualizar balances
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+-- Optimized function for updating balances
 CREATE OR REPLACE FUNCTION update_token_balances()
 RETURNS TRIGGER AS $$
 BEGIN
-    -- Actualizar balance del remitente
+    -- Update sender's balance
     UPDATE token_balances
     SET balance = balance - NEW.amount
     WHERE wallet_id = NEW.from_wallet_id AND token_id = NEW.token_id;
     
-    -- Actualizar balance del destinatario
+    -- Update recipient's balance
     UPDATE token_balances
     SET balance = balance + NEW.amount
     WHERE wallet_id = NEW.to_wallet_id AND token_id = NEW.token_id;
@@ -768,7 +768,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Trigger para actualizar balances
+-- Trigger for updating balances
 CREATE TRIGGER update_token_balances_trigger
 AFTER INSERT ON token_transfers
 FOR EACH ROW
@@ -788,16 +788,16 @@ EXECUTE FUNCTION update_token_balances();</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Composite Index Examples</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
--- Para consultas de actividades agrícolas por agricultor y fecha
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+-- For farm activities queries by farmer and date
 CREATE INDEX idx_farm_activities_farmer_date 
 ON farm_activities (farmer_id, date DESC);
 
--- Para consultas de carteras de inversión por usuario y tipo de activo
+-- For investment portfolio queries by user and asset type
 CREATE INDEX idx_investment_portfolios_user_asset 
 ON investment_portfolios (user_id, asset_type);
 
--- Para consultas de créditos de carbono verificados
+-- For verified carbon credits queries
 CREATE INDEX idx_carbon_credits_verified 
 ON carbon_credits (acre_nft_id) 
 WHERE verification_status = 'verified';</pre>
@@ -811,18 +811,18 @@ WHERE verification_status = 'verified';</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Partial Index Examples</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
--- Para acres activas
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+-- For active acres
 CREATE INDEX idx_acre_nfts_active 
 ON acre_nfts (farmer_id) 
 WHERE status = 'active';
 
--- Para créditos de carbono verificados
+-- For verified carbon credits
 CREATE INDEX idx_carbon_credits_verified 
 ON carbon_credits (acre_nft_id) 
 WHERE verification_status = 'verified';
 
--- Para usuarios verificados
+-- For verified users
 CREATE INDEX idx_users_verified 
 ON users (id) 
 WHERE kyc_status = 'verified';</pre>
@@ -848,7 +848,7 @@ WHERE kyc_status = 'verified';</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Corrected Token Transfer Structure</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
 CREATE TABLE token_transfers (
     tx_hash VARCHAR(66) PRIMARY KEY CHECK (tx_hash ~ '^0x[a-fA-F0-9]{64}$'),
     from_wallet_id INT NOT NULL REFERENCES wallets(wallet_id) ON DELETE CASCADE,
@@ -868,10 +868,10 @@ CREATE TABLE token_transfers (
             </p>
 
             <ul class="list-disc pl-6 space-y-2 text-gray-700 mb-6">
-              <li><strong>Integrity referencial completa</strong>: Elimina inconsistencias de datos</li>
-              <li><strong>Rendimiento optimizado</strong>: Consultas directas sin subconsultas costosas</li>
-              <li><strong>Soporte para múltiples redes</strong>: Permite transacciones en Polygon, BSC, Ethereum</li>
-              <li><strong>Seguridad mejorada</strong>: Políticas RLS basadas en wallets en lugar de direcciones</li>
+              <li><strong>Complete referential integrity</strong>: Eliminates data inconsistencies</li>
+              <li><strong>Optimized performance</strong>: Direct queries without costly subqueries</li>
+              <li><strong>Multi-chain support</strong>: Enables transactions on Polygon, BSC, Ethereum</li>
+              <li><strong>Enhanced security</strong>: RLS policies based on wallets rather than addresses</li>
             </ul>
 
             <h4 class="text-lg font-semibold text-gray-800 mb-4">3.1.2 Multiple Wallets per User</h4>
@@ -882,12 +882,12 @@ CREATE TABLE token_transfers (
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">User Wallet Management</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
--- Añadir columna para identificar la wallet principal
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+-- Add column to identify primary wallet
 ALTER TABLE wallets
 ADD COLUMN IF NOT EXISTS is_primary BOOLEAN DEFAULT FALSE;
 
--- Añadir restricción para garantizar solo una wallet primaria por usuario
+-- Add constraint to ensure only one primary wallet per user
 ALTER TABLE wallets
 ADD CONSTRAINT unique_primary_wallet 
 EXCLUDE (user_id WITH =, is_primary WITH =) 
@@ -908,16 +908,16 @@ DEFERRABLE INITIALLY DEFERRED;</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Corrected Carbon Credit Structure</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
--- Eliminar restricción UNIQUE que impide múltiples créditos
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+-- Remove UNIQUE constraint that prevents multiple credits
 ALTER TABLE carbon_credits
 DROP CONSTRAINT IF EXISTS carbon_credits_acre_nft_id_key;
 
--- Añadir un campo para el período de generación
+-- Add a field for the generation period
 ALTER TABLE carbon_credits
 ADD COLUMN IF NOT EXISTS generation_period DATE NOT NULL;
 
--- Añadir una restricción para evitar duplicados en el mismo período
+-- Add a constraint to prevent duplicates in the same period
 ALTER TABLE carbon_credits
 ADD CONSTRAINT unique_credit_per_period UNIQUE (acre_nft_id, generation_period);</pre>
             </div>
@@ -941,14 +941,14 @@ ADD CONSTRAINT unique_credit_per_period UNIQUE (acre_nft_id, generation_period);
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Revenue Distribution Logic</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
--- Obtener porcentajes desde la configuración
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+-- Get percentages from configuration
 SELECT 
     (config_value::JSONB)->>'platform_share'::NUMERIC INTO platform_share
 FROM system_config
 WHERE config_key = 'carbon_reward_distribution';
 
--- Si no se encuentran, usar valores predeterminados
+-- If not found, use default values
 IF platform_share IS NULL THEN platform_share := 0.12; END IF; -- 12%
 IF investor_share IS NULL THEN investor_share := 0.22; END IF; -- 22%
 IF farmer_share IS NULL THEN farmer_share := 0.66; END IF; -- 66%</pre>
@@ -1032,8 +1032,8 @@ IF farmer_share IS NULL THEN farmer_share := 0.66; END IF; -- 66%</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Acre Lifecycle Implementation</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
--- Tabla de acres tokenizados (AcreNFTs)
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+-- Table for tokenized acres (AcreNFTs)
 CREATE TABLE acre_nfts (
     nft_id SERIAL PRIMARY KEY,
     token_id VARCHAR(255) NOT NULL UNIQUE CHECK (token_id ~ '^0x[a-fA-F0-9]{64}$'),
@@ -1057,19 +1057,19 @@ CREATE TABLE acre_nfts (
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Acre Retirement Implementation</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
 CREATE OR REPLACE FUNCTION retire_acre_nft(p_acre_nft_id INT, p_reason TEXT)
 RETURNS VOID AS $$
 DECLARE
     farmer_id UUID;
     investor_id UUID;
 BEGIN
-    -- Obtener propietarios
+    -- Get owners
     SELECT farmer_id, investor_id INTO farmer_id, investor_id
     FROM acre_nfts
     WHERE nft_id = p_acre_nft_id;
     
-    -- Registrar el retiro
+    -- Record retirement
     INSERT INTO acre_retirements (
         acre_nft_id,
         retirement_date,
@@ -1084,12 +1084,12 @@ BEGIN
         investor_id
     );
     
-    -- Actualizar estado
+    -- Update status
     UPDATE acre_nfts
     SET status = 'retired'
     WHERE nft_id = p_acre_nft_id;
     
-    -- Procesar compensación final
+    -- Process final settlement
     PERFORM process_final_settlement(p_acre_nft_id);
 END;
 $$ LANGUAGE plpgsql;</pre>
@@ -1124,15 +1124,15 @@ $$ LANGUAGE plpgsql;</pre>
                 <div class="mt-6">
                   <div class="chart-legend" style="color: #10b981;">
                     <div class="w-3 h-3 rounded-full" style="background-color: #10b981;"></div>
-                    <span>Compensación por prácticas sostenibles y manejo del suelo</span>
+                    <span>Compensation for sustainable farming practices and soil management</span>
                   </div>
                   <div class="chart-legend" style="color: #3b82f6; margin-top: 0.5rem;">
                     <div class="w-3 h-3 rounded-full" style="background-color: #3b82f6;"></div>
-                    <span>Retorno de la inversión en el AcreNFT</span>
+                    <span>Return on investment in the AcreNFT</span>
                   </div>
                   <div class="chart-legend" style="color: #8b5cf6; margin-top: 0.5rem;">
                     <div class="w-3 h-3 rounded-full" style="background-color: #8b5cf6;"></div>
-                    <span>Mantenimiento del ecosistema y desarrollo</span>
+                    <span>Platform maintenance and development</span>
                   </div>
                 </div>
               </div>
@@ -1171,27 +1171,27 @@ $$ LANGUAGE plpgsql;</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Revenue Calculation Formula</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
--- Cálculo de ingresos totales por acre
-Ingresos_Totales = Ingresos_Carbono + Ingresos_Cosecha
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+-- Total Revenue per Acre
+Total_Revenue = Carbon_Revenue + Harvest_Revenue
 
--- Ingresos por Carbono
-Ingresos_Carbono = CO₂_reducido × Precio_ton_CO₂
-CO₂_reducido = Hectáreas × Factor_CO₂ × Índice_Calidad
-  • Factor_CO₂ para Moringa: 5 toneladas por hectárea
-  • Índice_Calidad: 0.8-1.2 (verificado por IoT)
-  • Precio_ton_CO₂: $8.50 (configurable)
+-- Carbon Revenue
+Carbon_Revenue = CO₂_Reduced × Price_per_ton_CO₂
+CO₂_Reduced = Hectares × CO₂_Factor × Quality_Index
+  • CO₂_Factor for Moringa: 5 tons per hectare
+  • Quality_Index: 0.8-1.2 (verified by IoT)
+  • Price_per_ton_CO₂: $8.50 (configurable)
 
--- Ingresos por Cosecha
-Ingresos_Cosecha = Rendimiento(kg/ha) × Precio_mercado
-  • Rendimiento Moringa: 1200 kg/ha (promedio)
-  • Precio Moringa: $4.2/kg (configurable)
+-- Harvest Revenue
+Harvest_Revenue = Yield(kg/ha) × Market_Price
+  • Moringa Yield: 1200 kg/ha (average)
+  • Moringa Price: $4.2/kg (configurable)
 
--- Ejemplo para 1 hectárea:
-CO₂_reducido = 1 ha × 5 t/ha × 1.0 = 5 toneladas
-Ingresos_Carbono = 5 t × $8.50 = $42.50
-Ingresos_Cosecha = 1200 kg × $4.2 = $5,040
-Ingresos_Totales = $5,082.50 por hectárea por año</pre>
+-- Example for 1 hectare:
+CO₂_Reduced = 1 ha × 5 t/ha × 1.0 = 5 tons
+Carbon_Revenue = 5 t × $8.50 = $42.50
+Harvest_Revenue = 1200 kg × $4.2 = $5,040
+Total_Revenue = $5,082.50 per hectare per year</pre>
             </div>
 
             <h4 class="text-lg font-semibold text-gray-800 mb-4">4.2.3 Farmer Earnings Calculation</h4>
@@ -1202,13 +1202,13 @@ Ingresos_Totales = $5,082.50 por hectárea por año</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Farmer Earnings Formula</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
-Retorno_Agricultores(USD/año) = (Ingresos_Carbono × 0.66) + (Ingresos_Cosecha × 0.70)
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+Farmer_Earnings(USD/year) = (Carbon_Revenue × 0.66) + (Harvest_Revenue × 0.70)
 
--- Ejemplo para 1 hectárea:
-Ingresos_Carbono = $42.50 × 0.66 = $28.05
-Ingresos_Cosecha = $5,040 × 0.70 = $3,528.00
-Retorno_Agricultores = $3,556.05 por hectárea por año</pre>
+-- Example for 1 hectare:
+Carbon_Revenue = $42.50 × 0.66 = $28.05
+Harvest_Revenue = $5,040 × 0.70 = $3,528.00
+Farmer_Earnings = $3,556.05 per hectare per year</pre>
             </div>
           </div>
         </div>
@@ -1231,24 +1231,24 @@ Retorno_Agricultores = $3,556.05 por hectárea por año</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Farm Activity Validation Trigger</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
 CREATE OR REPLACE FUNCTION validate_farm_activity()
 RETURNS TRIGGER AS $$
 DECLARE
     farm_size DECIMAL(10,2);
     max_yield DECIMAL(10,2);
 BEGIN
-    -- Validar tipo de actividad
+    -- Validate activity type
     IF NEW.activity_type NOT IN ('planting', 'harvest', 'maintenance', 'intercropping') THEN
         RAISE EXCEPTION 'Invalid farm activity type';
     END IF;
     
-    -- Validar rendimiento positivo
+    -- Validate positive yield
     IF NEW.yield_kg <= 0 THEN
         RAISE EXCEPTION 'Yield must be greater than 0';
     END IF;
     
-    -- Validar rendimiento máximo (10,000 kg por hectárea)
+    -- Validate maximum yield (10,000 kg per hectare)
     SELECT farm_size_hectares INTO farm_size
     FROM farmers
     WHERE user_id = NEW.farmer_id;
@@ -1262,7 +1262,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Trigger para validar actividades agrícolas
+-- Trigger for validating farm activities
 CREATE TRIGGER validate_farm_activity_trigger
 BEFORE INSERT ON farm_activities
 FOR EACH ROW
@@ -1277,8 +1277,8 @@ EXECUTE FUNCTION validate_farm_activity();</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Unique Constraint Implementation</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
--- Restricción para evitar duplicados en el mismo período
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+-- Constraint to prevent duplicates in the same period
 ALTER TABLE carbon_credits
 ADD CONSTRAINT unique_credit_per_period UNIQUE (acre_nft_id, generation_period);</pre>
             </div>
@@ -1313,8 +1313,8 @@ ADD CONSTRAINT unique_credit_per_period UNIQUE (acre_nft_id, generation_period);
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Audit Trigger Example</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
--- Trigger para auditoría
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+-- Trigger for audit logging
 CREATE OR REPLACE FUNCTION audit_table()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -1337,7 +1337,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Aplicar auditoría a tablas críticas
+-- Apply auditing to critical tables
 CREATE TRIGGER audit_users_trigger
 AFTER INSERT OR UPDATE OR DELETE ON users
 FOR EACH ROW EXECUTE FUNCTION audit_table();
