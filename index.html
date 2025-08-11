@@ -160,12 +160,12 @@
             }
         }
         
-        /* New role-specific classes */
+        /* Nuevas clases para roles específicos */
         .role-admin { background-color: rgba(139, 92, 246, 0.1); border-left: 4px solid var(--color-admin); }
         .role-investor { background-color: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--color-investor); }
         .role-farmer { background-color: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--color-farmer); }
         
-        /* Styles for diagrams */
+        /* Estilos para diagramas */
         .data-flow {
             position: relative;
             padding: 2rem;
@@ -421,7 +421,7 @@
 
           <div class="prose prose-lg max-w-none">
             <p class="text-xl text-gray-700 mb-6 leading-relaxed">
-              Sustave, a pioneering agritech and carbon credit tokenization platform, has developed a highly specialized PostgreSQL database architecture that ensures security, performance, and scalability in its sustainable agriculture ecosystem. This system is critical for connecting African farmers with global investors through the tokenization of farmland (AcreNFTs) and verified carbon credits.
+              Sustave, a pioneering agritech and carbon credit tokenization platform, has developed a highly specialized PostgreSQL database architecture that ensures security, performance, and scalability in its sustainable agriculture ecosystem. This system is critical for connecting African farmers with global investors through the tokenización of farmland (AcreNFTs) and verified carbon credits.
             </p>
 
             <div class="grid md:grid-cols-3 gap-6 my-8">
@@ -723,7 +723,7 @@ CREATE INDEX idx_acre_nfts_location ON acre_nfts USING GIST(location);</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">PostGIS Implementation for Farm Activities</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
 -- Table for farm performance metrics
 CREATE TABLE farm_performance (
     performance_id SERIAL PRIMARY KEY,
@@ -749,7 +749,7 @@ WHERE carbon_sequestration_tons > 0;</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Optimized Token Transfer Processing</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
 -- Optimized function for updating balances
 CREATE OR REPLACE FUNCTION update_token_balances()
 RETURNS TRIGGER AS $$
@@ -788,7 +788,7 @@ EXECUTE FUNCTION update_token_balances();</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Composite Index Examples</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
 -- For farm activities queries by farmer and date
 CREATE INDEX idx_farm_activities_farmer_date 
 ON farm_activities (farmer_id, date DESC);
@@ -811,7 +811,7 @@ WHERE verification_status = 'verified';</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Partial Index Examples</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
 -- For active acres
 CREATE INDEX idx_acre_nfts_active 
 ON acre_nfts (farmer_id) 
@@ -848,7 +848,7 @@ WHERE kyc_status = 'verified';</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Corrected Token Transfer Structure</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
 CREATE TABLE token_transfers (
     tx_hash VARCHAR(66) PRIMARY KEY CHECK (tx_hash ~ '^0x[a-fA-F0-9]{64}$'),
     from_wallet_id INT NOT NULL REFERENCES wallets(wallet_id) ON DELETE CASCADE,
@@ -868,10 +868,10 @@ CREATE TABLE token_transfers (
             </p>
 
             <ul class="list-disc pl-6 space-y-2 text-gray-700 mb-6">
-              <li><strong>Complete referential integrity</strong>: Eliminates data inconsistencies</li>
-              <li><strong>Optimized performance</strong>: Direct queries without costly subqueries</li>
-              <li><strong>Multi-chain support</strong>: Enables transactions on Polygon, BSC, Ethereum</li>
-              <li><strong>Enhanced security</strong>: RLS policies based on wallets rather than addresses</li>
+              <li><strong>Integrity referencial completa</strong>: Elimina inconsistencias de datos</li>
+              <li><strong>Rendimiento optimizado</strong>: Consultas directas sin subconsultas costosas</li>
+              <li><strong>Soporte para múltiples redes</strong>: Permite transacciones en Polygon, BSC, Ethereum</li>
+              <li><strong>Seguridad mejorada</strong>: Políticas RLS basadas en wallets en lugar de direcciones</li>
             </ul>
 
             <h4 class="text-lg font-semibold text-gray-800 mb-4">3.1.2 Multiple Wallets per User</h4>
@@ -882,7 +882,7 @@ CREATE TABLE token_transfers (
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">User Wallet Management</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
 -- Add column to identify primary wallet
 ALTER TABLE wallets
 ADD COLUMN IF NOT EXISTS is_primary BOOLEAN DEFAULT FALSE;
@@ -908,7 +908,7 @@ DEFERRABLE INITIALLY DEFERRED;</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Corrected Carbon Credit Structure</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
 -- Remove UNIQUE constraint that prevents multiple credits
 ALTER TABLE carbon_credits
 DROP CONSTRAINT IF EXISTS carbon_credits_acre_nft_id_key;
@@ -941,7 +941,7 @@ ADD CONSTRAINT unique_credit_per_period UNIQUE (acre_nft_id, generation_period);
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Revenue Distribution Logic</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
 -- Get percentages from configuration
 SELECT 
     (config_value::JSONB)->>'platform_share'::NUMERIC INTO platform_share
@@ -1032,7 +1032,7 @@ IF farmer_share IS NULL THEN farmer_share := 0.66; END IF; -- 66%</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Acre Lifecycle Implementation</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
 -- Table for tokenized acres (AcreNFTs)
 CREATE TABLE acre_nfts (
     nft_id SERIAL PRIMARY KEY,
@@ -1057,8 +1057,8 @@ CREATE TABLE acre_nfts (
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Acre Retirement Implementation</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
-CREATE OR REPLACE FUNCTION retire_acre_nft(p_acre_nft_id INT, p_reason TEXT)
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
+REATE OR REPLACE FUNCTION retire_acre_nft(p_acre_nft_id INT, p_reason TEXT)
 RETURNS VOID AS $$
 DECLARE
     farmer_id UUID;
@@ -1124,15 +1124,15 @@ $$ LANGUAGE plpgsql;</pre>
                 <div class="mt-6">
                   <div class="chart-legend" style="color: #10b981;">
                     <div class="w-3 h-3 rounded-full" style="background-color: #10b981;"></div>
-                    <span>Compensation for sustainable farming practices and soil management</span>
+                    <span>Compensación por prácticas sostenibles y manejo del suelo</span>
                   </div>
                   <div class="chart-legend" style="color: #3b82f6; margin-top: 0.5rem;">
                     <div class="w-3 h-3 rounded-full" style="background-color: #3b82f6;"></div>
-                    <span>Return on investment in the AcreNFT</span>
+                    <span>Retorno de la inversión en el AcreNFT</span>
                   </div>
                   <div class="chart-legend" style="color: #8b5cf6; margin-top: 0.5rem;">
                     <div class="w-3 h-3 rounded-full" style="background-color: #8b5cf6;"></div>
-                    <span>Platform maintenance and development</span>
+                    <span>Mantenimiento del ecosistema y desarrollo</span>
                   </div>
                 </div>
               </div>
@@ -1171,7 +1171,7 @@ $$ LANGUAGE plpgsql;</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Revenue Calculation Formula</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
 -- Total Revenue per Acre
 Total_Revenue = Carbon_Revenue + Harvest_Revenue
 
@@ -1202,7 +1202,7 @@ Total_Revenue = $5,082.50 per hectare per year</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Farmer Earnings Formula</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
 Farmer_Earnings(USD/year) = (Carbon_Revenue × 0.66) + (Harvest_Revenue × 0.70)
 
 -- Example for 1 hectare:
@@ -1231,7 +1231,7 @@ Farmer_Earnings = $3,556.05 per hectare per year</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Farm Activity Validation Trigger</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
 CREATE OR REPLACE FUNCTION validate_farm_activity()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -1277,7 +1277,7 @@ EXECUTE FUNCTION validate_farm_activity();</pre>
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Unique Constraint Implementation</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
 -- Constraint to prevent duplicates in the same period
 ALTER TABLE carbon_credits
 ADD CONSTRAINT unique_credit_per_period UNIQUE (acre_nft_id, generation_period);</pre>
@@ -1313,7 +1313,7 @@ ADD CONSTRAINT unique_credit_per_period UNIQUE (acre_nft_id, generation_period);
 
             <div class="highlight-box">
               <h5 class="font-semibold mb-3">Audit Trigger Example</h5>
-              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto>
+              <pre class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">
 -- Trigger for audit logging
 CREATE OR REPLACE FUNCTION audit_table()
 RETURNS TRIGGER AS $$
