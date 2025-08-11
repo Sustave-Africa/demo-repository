@@ -1,4 +1,2 @@
-# Welcome to your organization's demo respository
-This code repository (or "repo") is designed to demonstrate the best GitHub has to offer with the least amount of noise.
-
-The repo includes an `index.html` file (so it can render a web page), two GitHub Actions workflows, and a CSS stylesheet dependency.
+# Welcome to Sustave
+This repository contains a comprehensive technical documentation of Sustave's PostgreSQL database architecture, designed specifically for stakeholders including co-founders, investors, farmers, and business partners. The documentation details the security, performance, and data integrity enhancements implemented in Sustave's agritech platform, with a focus on carbon credit tokenization and sustainable farming practices.
